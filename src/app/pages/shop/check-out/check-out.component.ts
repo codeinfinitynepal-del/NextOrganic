@@ -30,6 +30,13 @@ export class CheckOutComponent implements OnInit, AfterViewInit, OnDestroy {
   cartList: any[] = [];
   private cartSubscription!: Subscription;
 
+  showErrorName: boolean = false;
+  showErrorPhone: boolean = false;
+  showErrorInvalidPhone: boolean = false;
+  showErrorAddress: boolean = false;
+  showErrorPayment: boolean = false;
+  showErrorRemarks: boolean = false;
+
   constructor(
     private router: Router,
     public service: ShopCommonService,
@@ -38,7 +45,7 @@ export class CheckOutComponent implements OnInit, AfterViewInit, OnDestroy {
   ) { }
 
 
-  public baseUrl= environment.apiBaseUrl
+  public baseUrl = environment.apiBaseUrl
 
   // ... (तपाईंको माथिको कोड उस्तै) ...
   ngOnInit(): void {
@@ -107,27 +114,56 @@ export class CheckOutComponent implements OnInit, AfterViewInit, OnDestroy {
     const m = this.service.checkoutModel;
 
     if (!m.customerName?.trim()) {
-      this.toastr.warning('Customer name is required.');
+      // this.toastr.warning('Customer name is required.');
+      this.showErrorName = true;
+      setTimeout(() => {
+        this.showErrorName = false;
+      }, 800);
       return false;
     }
 
     if (!m.phoneNumber?.trim()) {
-      this.toastr.warning('Phone number is required.');
+      // this.toastr.warning('Phone number is required.');
+      this.showErrorPhone = true;
+      setTimeout(() => {
+        this.showErrorPhone = false;
+      }, 800);
       return false;
     }
 
     if (!/^9[678]\d{8}$/.test(m.phoneNumber)) {
-      this.toastr.warning('Invalid phone number.');
+      // this.toastr.warning('Invalid phone number.');
+      this.showErrorInvalidPhone = true;
+      setTimeout(() => {
+        this.showErrorInvalidPhone = false;
+      }, 800);
       return false;
     }
 
     if (!m.address?.trim()) {
-      this.toastr.warning('Address is required.');
+      // this.toastr.warning('Address is required.');
+      this.showErrorAddress = true;
+      setTimeout(() => {
+        this.showErrorAddress = false;
+      }, 800);
+      return false;
+    }
+
+    if (!m.remarks) {
+      // this.toastr.warning('Remarks is required.');
+      this.showErrorRemarks = true;
+      setTimeout(() => {
+        this.showErrorRemarks = false;
+      }, 800);
       return false;
     }
 
     if (!m.paymentMethod) {
-      this.toastr.warning('Please select a payment method.');
+      // this.toastr.warning('Please select a payment method.');
+      this.showErrorPayment = true;
+      setTimeout(() => {
+        this.showErrorPayment = false;
+      }, 800);
       return false;
     }
 
@@ -191,6 +227,9 @@ export class CheckOutComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  reset() {
+
+  }
 
   // postCheckOut(form: any) {
   //   if (!form || form.invalid) {
