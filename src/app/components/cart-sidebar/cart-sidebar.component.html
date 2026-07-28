@@ -6,7 +6,7 @@
         <i class="fa-solid fa-xmark"></i>
     </button>
 
-    <h2 class="heading-title text-uppercase">
+    <h2 *ngIf="cartList.length > 0" class="heading-title text-uppercase">
         Cart Items - <span>{{ cartList.length }}</span>
 
     </h2>
