@@ -1,115 +1,148 @@
 <div class="body-layout admin">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="card-body">
-                <div class="card-table">
-                    <div class="table__wrapper table__wrapper-70">
-                        <table class="">
-                            <thead>
-                                <tr>
-                                    <th>Serial no.</th>
-                                    <th>OrderNo</th>
-                                    <th>Order Id</th>
-                                    <!-- <th>DeliveryCharge</th> -->
-                                    <th>Order Status</th>
-                                    <th>Total Amount</th>
-                                    <!-- <th>Grand Amount</th> -->
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let item of orderList; let i = index">
-                                    <td>{{ i + 1 }}</td>
-                                    <td>{{ item.orderNo }}</td>
-                                    <td>#{{ item.orderId }}</td>
-                                    <!-- <td>Rs. {{ item.deliveryCharge | number:'1.2-2' }}</td> -->
-                                    <td>
-                                        <span class="badge" [ngClass]="{
-                                        'bg-warning text-dark': item.orderStatus?.toLowerCase() === 'pending',
-                                        'bg-success': item.orderStatus?.toLowerCase() === 'delivered' || item.orderStatus?.toLowerCase() === 'completed',
-                                        'bg-danger': item.orderStatus?.toLowerCase() === 'cancelled',
-                                        'bg-info text-dark': item.orderStatus?.toLowerCase() === 'shipped'
-                                        }">
-                                          {{ item.orderStatus?.toUpperCase() }}
-                                        </span>
-                                    </td>
-                                    <td>Rs. {{ item.totalAmount | number:'1.2-2' }}</td>
-                                    <!-- <td class="fw-bold text-primary">Rs. {{ item.grandAmount | number:'1.2-2' }}</td> -->
-                                    <td style="width: 215px;">
-                                        <button class="btn btn-sm btn-primary me-1" (click)="openPopup(item.orderId)">
-                                            <i class="fa fa-eye"></i> View
-                                        </button>
-                                        <button class="btn btn-sm btn-secondary me-1" (click)="openPopupStatus(item)">
-                                            <i class="fa fa-eye"></i> Status
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="card-body">
+        <div class="card-table">
+          <div class="table__wrapper table__wrapper-70">
+            <table class="">
+              <thead>
+                <tr>
+                  <th>Serial no.</th>
+                  <th>OrderNo</th>
+                  <th>Order Id</th>
+                  <!-- <th>DeliveryCharge</th> -->
+                  <th>Order Status</th>
+                  <th>Total Amount</th>
+                  <!-- <th>Grand Amount</th> -->
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of orderList; let i = index">
+                  <td>{{ i + 1 }}</td>
+                  <td>{{ item.orderNo }}</td>
+                  <td>#{{ item.orderId }}</td>
+                  <!-- <td>Rs. {{ item.deliveryCharge | number:'1.2-2' }}</td> -->
+                  <td>
+                    <span
+                      class="badge"
+                      [ngClass]="{
+                        'bg-warning text-dark':
+                          item.orderStatus?.toLowerCase() === 'pending',
+                        'bg-success':
+                          item.orderStatus?.toLowerCase() === 'delivered' ||
+                          item.orderStatus?.toLowerCase() === 'completed',
+                        'bg-danger':
+                          item.orderStatus?.toLowerCase() === 'cancelled',
+                        'bg-info text-dark':
+                          item.orderStatus?.toLowerCase() === 'shipped',
+                      }"
+                    >
+                      {{ item.orderStatus?.toUpperCase() }}
+                    </span>
+                  </td>
+                  <td>Rs. {{ item.totalAmount | number: "1.2-2" }}</td>
+                  <!-- <td class="fw-bold text-primary">Rs. {{ item.grandAmount | number:'1.2-2' }}</td> -->
+                  <td style="width: 215px">
+                    <button
+                      class="btn btn-sm btn-primary me-1"
+                      (click)="openPopup(item.orderId)"
+                    >
+                      <i class="fa fa-eye"></i> View
+                    </button>
+                    <button
+                      class="btn btn-sm btn-secondary me-1"
+                      (click)="openPopupStatus(item)"
+                    >
+                      <i class="fa fa-eye"></i> Status
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 
 <div class="popup-overlay" (click)="closePopup()" *ngIf="showPopup"></div>
 <div class="popup-container w-520" *ngIf="showPopup">
-    <div class="popup-header">
-        <h3 class="mb-0 section-title">Order Product List</h3>
-        <span class="close-btn" (click)="closePopup()">×</span>
+  <div class="popup-header">
+    <h3 class="mb-0 section-title">Order Product List</h3>
+    <span class="close-btn" (click)="closePopup()">×</span>
+  </div>
+  <div class="popup-body">
+    <div class="table-responsive-sm">
+      <table style="width: 100%" class="table-1">
+        <thead>
+          <tr>
+            <th style="width: 120px">Serial No.</th>
+            <th>Product Name</th>
+            <th>Qty</th>
+            <th>Price</th>
+            <th style="width: 140px" class="text-end">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of productList; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ item.productName }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.price | number: "1.2-2" }}</td>
+            <td class="text-end">{{ item.totalAmount | number: "1.2-2" }}</td>
+          </tr>
+          <tr>
+            <td colspan="4" class="text-end"><strong> Total Sum</strong></td>
+            <td class="text-end">
+              <strong>{{ calculateGrandTotal() | number: "1.2-2" }}</strong>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <div class="popup-body">
-        <div class="table-responsive-sm">
-            <table style="width: 100%;" class="table-1">
-                <thead>
-                    <tr>
-                        <th style="width: 120px;">Serial No.</th>
-                        <th>Product Name </th>
-                        <th>Qty</th>
-                        <th>Price</th>
-                        <th style="width: 140px;">Total Amount</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let item of productList; let i = index">
-                        <td>{{ i + 1 }}</td>
-                        <td>{{ item.productName }}</td>
-                        <td>{{ item.quantity }}</td>
-                        <td>{{ item.price | number:'1.2-2' }}</td>
-                        <td>{{ item.totalAmount | number:'1.2-2' }}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="popup-footer"></div>
+  </div>
+  <div class="popup-footer"></div>
 </div>
 
-<div class="popup-overlay" (click)="closePopupStatus()" *ngIf="showPopupStatus"></div>
+<div
+  class="popup-overlay"
+  (click)="closePopupStatus()"
+  *ngIf="showPopupStatus"
+></div>
 <div class="popup-container w-520" *ngIf="showPopupStatus">
-    <div class="popup-header">
-        <h3 class="mb-0 section-title"> Change Status</h3>
-        <span class="close-btn" (click)="closePopupStatus()">×</span>
-    </div>
+  <div class="popup-header">
+    <h3 class="mb-0 section-title">Change Status</h3>
+    <span class="close-btn" (click)="closePopupStatus()">×</span>
+  </div>
 
-    <div class="popup-body">
-        <form>
-            <select [(ngModel)]="selectedStatus" name="orderStatus" id="status" class="d-flex gap-2 w-100">
-                <option value="">Select Status</option>
-                <option value="Pending">Pending</option>
-                <option value="Shipped">Shipped</option>
-                <option value="completed">Completed</option>
-                <option value="Cancelled">Cancelled</option>
-            </select>
+  <div class="popup-body">
+    <form>
+      <select
+        [(ngModel)]="selectedStatus"
+        name="orderStatus"
+        id="status"
+        class="d-flex gap-2 w-100"
+      >
+        <option value="">Select Status</option>
+        <option value="Pending">Pending</option>
+        <option value="Shipped">Shipped</option>
+        <option value="completed">Completed</option>
+        <option value="Cancelled">Cancelled</option>
+      </select>
 
-            <div class="mt-3">
-                <button type="button" class="btn btn-sm btn-secondary me-1" [disabled]="isLoading"
-                    (click)="submitStatus(selectedItem.orderId)">
-                    {{ isLoading ? 'Submitting...' : 'Submit' }}
-                </button>
-            </div>
-        </form>
-    </div>
-    <div class="popup-footer"></div>
+      <div class="mt-3">
+        <button
+          type="button"
+          class="btn btn-sm btn-secondary me-1"
+          [disabled]="isLoading"
+          (click)="submitStatus(selectedItem.orderId)"
+        >
+          {{ isLoading ? "Submitting..." : "Submit" }}
+        </button>
+      </div>
+    </form>
+  </div>
+  <div class="popup-footer"></div>
 </div>
