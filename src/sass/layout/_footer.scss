@@ -191,7 +191,11 @@
   border-color: #ff0000;
 }
 
-.whatsap:hover {
+.footer .whatsap:hover {
   background: #25d366;
   border-color: #25d366;
+}
+
+.social-share-icons .whatsap:hover {
+  color: #25d366;
 }

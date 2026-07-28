@@ -25,12 +25,11 @@ import { AuthService } from '../../../shared-services/authService/auth.service';
     HeaderComponent,
     FooterComponent,
     ProductCardComponent,
-    RouterModule
+    RouterModule,
   ],
   templateUrl: './shop-single.component.html',
 })
 export class ShopSingleComponent implements AfterViewInit, OnInit {
-
   isLoading: boolean = false;
   productId!: number;
   product: any;
@@ -54,8 +53,8 @@ export class ShopSingleComponent implements AfterViewInit, OnInit {
     public service: ShopCommonService,
     private toastr: ToastrService,
     private authService: AuthService,
-    private cartEventService: CartEventService
-  ) { }
+    private cartEventService: CartEventService,
+  ) {}
 
   openPopup(packet: any) {
     const event = packet.clickEvent;
@@ -68,7 +67,6 @@ export class ShopSingleComponent implements AfterViewInit, OnInit {
     this.singleProduct = product;
     this.productId = product.id;
     this.maxQty = product.stockQuantity;
-
   }
 
   closePopup() {
@@ -84,8 +82,12 @@ export class ShopSingleComponent implements AfterViewInit, OnInit {
         // ADD THIS
         this.applyRelatedProductsFilter();
       },
-      error: (err: any) => { this.isLoading = false; },
-      complete: () => { this.isLoading = false; },
+      error: (err: any) => {
+        this.isLoading = false;
+      },
+      complete: () => {
+        this.isLoading = false;
+      },
     });
   }
 
@@ -93,7 +95,8 @@ export class ShopSingleComponent implements AfterViewInit, OnInit {
   applyRelatedProductsFilter() {
     if (this.products.length > 0 && this.product) {
       this.relatedProducts = this.products.filter(
-        (p: any) => p.categoryId === this.product.categoryId && p.id !== this.product.id
+        (p: any) =>
+          p.categoryId === this.product.categoryId && p.id !== this.product.id,
       );
     }
   }
@@ -122,7 +125,7 @@ export class ShopSingleComponent implements AfterViewInit, OnInit {
   ngOnInit(): void {
     this.fetchProductList();
 
-    this.route.paramMap.subscribe(params => {
+    this.route.paramMap.subscribe((params) => {
       const id = Number(params.get('id'));
       this.productId = id;
 
@@ -132,12 +135,12 @@ export class ShopSingleComponent implements AfterViewInit, OnInit {
           this.maxQty = res.stockQuantity;
           this.formattedDescription = this.formatDescription(res.description);
           this.applyRelatedProductsFilter();
-        }
+        },
       });
     });
   }
 
-  ngAfterViewInit(): void { }
+  ngAfterViewInit(): void {}
 
   // Add to cart
   decrease() {
@@ -163,13 +166,12 @@ export class ShopSingleComponent implements AfterViewInit, OnInit {
 
     let payload = {
       productId: this.productId,
-      quantity: this.quantity
-    }
+      quantity: this.quantity,
+    };
 
     this.isSubmitting = true;
     this.service.postCart(payload).subscribe({
       next: (res: any) => {
-
         this.isSubmitting = false;
         this.cartEventService.notifyCartUpdate();
         this.showSuccessToast = true;
@@ -179,15 +181,18 @@ export class ShopSingleComponent implements AfterViewInit, OnInit {
           this.closePopup();
         }, 800);
       },
-      error: (err: any) => { this.isSubmitting = false; },
-      complete: () => { this.isSubmitting = false; },
+      error: (err: any) => {
+        this.isSubmitting = false;
+      },
+      complete: () => {
+        this.isSubmitting = false;
+      },
     });
   }
 
   formattedDescription: any = '';
 
   private formatDescription(html: string): string {
-
     if (!html) return '';
 
     const parser = new DOMParser();
@@ -199,7 +204,6 @@ export class ShopSingleComponent implements AfterViewInit, OnInit {
     let currentColumn: HTMLDivElement | null = null;
 
     Array.from(doc.body.children).forEach((node) => {
-
       if (/^H[1-6]$/i.test(node.tagName)) {
         currentColumn = document.createElement('div');
         currentColumn.className = 'detail-column';
@@ -217,5 +221,22 @@ export class ShopSingleComponent implements AfterViewInit, OnInit {
 
     return container.outerHTML;
   }
+  
+  // Optional parameter राखिएको छ ताकि Footer बाट वा Product Card बाट दुवै ठाउँबाट प्रयोग गर्न सकियोस्
+  chatOnWhatsApp(product?: any): void {
+    const phone = '9779841643759'; // तपाईंको मुख्य फोन नम्बर राख्नुहोस्
 
+    let messageText = `Hello, I would like to inquire about Smriti Organic Center.`;
+
+    // यदि प्रडक्ट पास गरिएको छ भने
+    if (product && product.productName) {
+      messageText = `Hello, I'm interested in ${product.productName}. Price: Rs. ${product.price}`;
+    }
+
+    const message = encodeURIComponent(messageText);
+
+    if (typeof window !== 'undefined') {
+      window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
+    }
+  }
 }

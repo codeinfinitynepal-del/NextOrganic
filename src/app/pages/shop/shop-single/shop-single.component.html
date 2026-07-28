@@ -1,39 +1,42 @@
 <app-header></app-header>
 
 <div class="bread">
-    <div class="container">
-        <div class="breadcrumb-outer">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="#">Home</a></li>
-                    <li class="breadcrumb-item"><a href="#">Product</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">{{product.productName}}</li>
-                </ol>
-            </nav>
-        </div>
+  <div class="container">
+    <div class="breadcrumb-outer">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="#">Home</a></li>
+          <li class="breadcrumb-item"><a href="#">Product</a></li>
+          <li class="breadcrumb-item active" aria-current="page">
+            {{ product.productName }}
+          </li>
+        </ol>
+      </nav>
     </div>
+  </div>
 </div>
 
-
 <section class="page-shop-details bg-light p-t-32 p-b-60">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-
-                <div class="product-single-img-wrap">
-                    <div class="product-single-img text-center">
-                        <!-- <img *ngIf="product?.productImageBase64"
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="product-single-img-wrap">
+          <div class="product-single-img text-center">
+            <!-- <img *ngIf="product?.productImageBase64"
                             [src]="'data:image/png;base64,' + product.productImageBase64" [alt]="product?.productName"> -->
 
-                        <img [src]="product.productImageUrl" [alt]="product.title"
-                            style="border-radius: 5px; object-fit: cover;" />
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="product-single-content">
-                    <h3 class="product-single-title mb-3">{{product?.productName}}</h3>
-                    <!-- <div class="product-single-rating m-b-24">
+            <img
+              [src]="product.productImageUrl"
+              [alt]="product.title"
+              style="border-radius: 5px; object-fit: cover"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="product-single-content">
+          <h3 class="product-single-title mb-3">{{ product?.productName }}</h3>
+          <!-- <div class="product-single-rating m-b-24">
 
                         <i class="fa-solid fa-star"></i>
                         <i class="fa-solid fa-star"></i>
@@ -42,136 +45,149 @@
                         <i class="fa-solid fa-star"></i>
 
                     </div> -->
-                    <h4 class="product-single-price">Rs {{product?.price}}</h4>
-                    <div  class="badge mb-3"
-                        [ngClass]="product.stockQuantity > 0 ? 'text-bg-success d-none' : 'text-bg-danger'">
+          <h4 class="product-single-price">Rs {{ product?.price }}</h4>
+          <div
+            class="badge mb-3"
+            [ngClass]="
+              product.stockQuantity > 0
+                ? 'text-bg-success d-none'
+                : 'text-bg-danger'
+            "
+          >
+            {{ product.stockQuantity > 0 ? "" : "Out of Stock" }}
+          </div>
+          <div class="product-single-text">
+            <div [innerHTML]="product.shortDescription"></div>
+          </div>
+          <div class="outer d-flex mt-4 gap-4 align-items-center">
+            <div
+              class="quantity"
+              [ngClass]="product.stockQuantity <= 0 ? 'disabled' : ''"
+            >
+              <div class="quantity-button minus" (click)="decrease()">-</div>
 
-                        {{ product.stockQuantity > 0
-                        ? ''
-                        : 'Out of Stock' }}
+              <input
+                type="text"
+                class="qtyText"
+                [(ngModel)]="quantity"
+                readonly
+                [disabled]="product.stockQuantity <= 0"
+              />
 
-                    </div>
-                    <div class="product-single-text">
-                        <div [innerHTML]="product.shortDescription"></div>
-                    </div>
-                    <div class="outer d-flex mt-4 gap-4 align-items-center">
-                        <div class="quantity" [ngClass]="product.stockQuantity <= 0 ? 'disabled' : ''">
+              <div class="quantity-button plus" (click)="increase()">+</div>
+            </div>
+            <div class="social-share">
+              <h4 class="social-share-title mb-0">Share on</h4>
+              <div class="social-share-icons">
+                <!-- WhatsApp -->
+                <a
+                  href="javascript:void(0)"
+                  (click)="chatOnWhatsApp()"
+                  title="Whatsapp"
+                  class="whatsap"
+                >
+                  <i class="ri-whatsapp-line"></i>
+                </a>
 
-                            <div class="quantity-button minus" (click)="decrease()">
-                                -
-                            </div>
-
-                            <input type="text" class="qtyText" [(ngModel)]="quantity" readonly
-                                [disabled]="product.stockQuantity <= 0">
-
-                            <div class="quantity-button plus" (click)="increase()">
-                                +
-                            </div>
-
-                        </div>
-                        <div class="social-share  d-none">
-                            <h4 class="social-share-title mb-0">Share on</h4>
-                            <div class="social-share-icons">
-
-                                <!-- WhatsApp -->
-                                <a href="https://wa.me/?text=https://yourwebsite.com/current-page" target="_blank">
-                                    <i class="ri-whatsapp-line"></i>
-                                </a>
-
-                                <!-- Viber -->
-                                <a href="viber://forward?text=https://yourwebsite.com/current-page">
+                <!-- Viber -->
+                <!-- <a href="viber://forward?text=https://yourwebsite.com/current-page">
                                     <i class="fa-brands fa-viber"></i>
-                                </a>
+                                </a> -->
 
-                                <!-- Facebook Share -->
-                                <a href="https://www.facebook.com/sharer/sharer.php?u=https://yourwebsite.com/current-page"
+                <!-- Facebook Share -->
+                <!-- <a href="https://www.facebook.com/sharer/sharer.php?u=https://yourwebsite.com/current-page"
                                     target="_blank">
                                     <i class="ri-facebook-box-line"></i>
-                                </a>
+                                </a> -->
+              </div>
+            </div>
+          </div>
 
-                            </div>
-                        </div>
-                    </div>
+          <div class="btns-group m-t-24">
+            <button
+              class="btn btn-primary"
+              (click)="createCart()"
+              [disabled]="product?.stockQuantity <= 0 || isSubmitting"
+            >
+              <!-- Loading Spinner -->
+              <span
+                *ngIf="isSubmitting"
+                class="spinner-border spinner-border-sm me-1"
+                role="status"
+                aria-hidden="true"
+              ></span>
 
+              <!-- Button Text -->
+              {{ isSubmitting ? "Adding..." : "Add To Cart" }}
 
-                    <div class="btns-group m-t-24">
-                        
+              <!-- Arrow Icon (Only show when not loading) -->
+              <i
+                *ngIf="!isSubmitting"
+                class="ms-1 ri-arrow-right-long-line"
+              ></i>
+            </button>
 
-                        <button class="btn btn-primary" (click)="createCart()"
-                            [disabled]="product?.stockQuantity <= 0 || isSubmitting">
-
-                            <!-- Loading Spinner -->
-                            <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-1" role="status"
-                                aria-hidden="true"></span>
-
-                            <!-- Button Text -->
-                            {{ isSubmitting ? 'Adding...' : 'Add To Cart' }}
-
-                            <!-- Arrow Icon (Only show when not loading) -->
-                            <i *ngIf="!isSubmitting" class="ms-1 ri-arrow-right-long-line"></i>
-                        </button>
-
-                        <!-- <a [routerLink]="['/shop/checkout']" class="btn btn-outline-primary  me-4">
+            <!-- <a [routerLink]="['/shop/checkout']" class="btn btn-outline-primary  me-4">
                               Proceed to Checkout
                             <i class="ms-1 ri-arrow-right-long-line"></i>
                         </a> -->
-
-
-                    </div>
-
-                </div>
-            </div>
+          </div>
         </div>
+      </div>
+    </div>
 
-        <mat-tab-group animationDuration="0ms" class="m-t-32 product-single-tab">
-            <mat-tab label="Description">
-                <div class="m-t-24">
-                    <section class="nutrition-section">
+    <mat-tab-group animationDuration="0ms" class="m-t-32 product-single-tab">
+      <mat-tab label="Description">
+        <div class="m-t-24">
+          <section class="nutrition-section">
+            <!-- <div class="product-details" [innerHTML]="product.description"></div> -->
+            <div [innerHTML]="formattedDescription"></div>
 
-                        <!-- <div class="product-details" [innerHTML]="product.description"></div> -->
-                        <div [innerHTML]="formattedDescription"></div>
-
-                        <div class="large-banner large-banner--shop"><img src="../../../assets/img/natural-img.jpg"
-                                alt="banner">
-                            <div class="banner-text">
-                                <h2 class="mb-10">100% Natural Ingredients</h2>
-                                <p> May help increase energy and stamina. Can support exercise performance and
-                                    endurance. </p>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-            </mat-tab>
-            <!-- <mat-tab label="Review">
+            <div class="large-banner large-banner--shop">
+              <img src="../../../assets/img/natural-img.jpg" alt="banner" />
+              <div class="banner-text">
+                <h2 class="mb-10">100% Natural Ingredients</h2>
+                <p>
+                  May help increase energy and stamina. Can support exercise
+                  performance and endurance.
+                </p>
+              </div>
+            </div>
+          </section>
+        </div>
+      </mat-tab>
+      <!-- <mat-tab label="Review">
                 <div class="m-t-24">Dell 27 Curved Gaming Monitor – S2721HGF ; Diagonal Size. 27" ; Resolution / Refresh
                     Rate. Full HD
                     (1080p) 1920 x 1080 at 144 Hz ;
                     Adaptive Sync. NVIDIA</div>
             </mat-tab> -->
-        </mat-tab-group>
+    </mat-tab-group>
 
-        <!-- Related Products Section -->
-        <div class="row m-t-40">
-            @for(product of (relatedProducts | slice:0:4); track product.id) {
-            <div class="col-md-4 col-lg-3">
-                <app-product-card [product]="product" [isHomePage]="false" (addToCartClick)="openPopup($event)">
-                </app-product-card>
-            </div>
-            } @empty {
-            <div class="col-12 text-center">
-                <p>No related products found.</p>
-            </div>
-            }
+    <!-- Related Products Section -->
+    <div class="row m-t-40">
+      @for (product of relatedProducts | slice: 0 : 4; track product.id) {
+        <div class="col-md-4 col-lg-3">
+          <app-product-card
+            [product]="product"
+            [isHomePage]="false"
+            (addToCartClick)="openPopup($event)"
+          >
+          </app-product-card>
         </div>
-
+      } @empty {
+        <div class="col-12 text-center">
+          <p>No related products found.</p>
+        </div>
+      }
     </div>
+  </div>
 </section>
 <app-footer></app-footer>
 
-
-<div class="popup-toast" style="top:50%" *ngIf="showSuccessToast">
-    <i class="ri-checkbox-circle-fill"></i>
-    <span>Product added to cart successfully.</span>
+<div class="popup-toast" style="top: 50%" *ngIf="showSuccessToast">
+  <i class="ri-checkbox-circle-fill"></i>
+  <span>Product added to cart successfully.</span>
 </div>
 
 <!-- Overlay -->

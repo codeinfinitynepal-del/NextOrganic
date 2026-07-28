@@ -62,7 +62,7 @@
                         <th>Product Name </th>
                         <th>Qty</th>
                         <th>Price</th>
-                        <th style="width: 140px;">Total Amount</th>
+                        <th style="width: 140px;" class="text-end">Total </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -71,7 +71,11 @@
                         <td>{{ item.productName }}</td>
                         <td>{{ item.quantity }}</td>
                         <td>{{ item.price | number:'1.2-2' }}</td>
-                        <td>{{ item.totalAmount | number:'1.2-2' }}</td>
+                        <td class="text-end">{{ item.totalAmount | number:'1.2-2' }}</td>
+                    </tr>
+                    <tr>
+                        <td  colspan="4" class="text-end"><strong> Total Sum</strong></td>
+                        <td class="text-end"><strong>{{  calculateGrandTotal()  | number:'1.2-2' }}</strong> </td>
                     </tr>
                 </tbody>
             </table>
