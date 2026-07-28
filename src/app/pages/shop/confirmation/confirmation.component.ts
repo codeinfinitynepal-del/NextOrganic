@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+import { LocationStrategy } from '@angular/common';
 import { HeaderComponent } from '../../../header/header.component';
 import { FooterComponent } from '../../../footer/footer.component';
 
@@ -18,9 +19,17 @@ export class ConfirmationComponent implements OnInit {
   orderDate: string = '';
   totalAmount: number = 0;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private route: ActivatedRoute,
+    private locationStrategy: LocationStrategy
+  ) {}
 
   ngOnInit(): void {
+    // Prevent back navigation by pushing state
+    history.pushState(null, '', location.href);
+    this.locationStrategy.onPopState(() => {
+      history.pushState(null, '', location.href);
+    });
 
     this.route.queryParams.subscribe(params => {
       this.orderId = params['orderId'];
@@ -29,7 +38,6 @@ export class ConfirmationComponent implements OnInit {
       this.deliveryCharge = params['deliveryCharge'];
       this.totalAmount = params['totalAmount'];
     });
-
   }
 
 }
