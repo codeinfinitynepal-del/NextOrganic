@@ -114,7 +114,7 @@ export class ShopCartComponent implements OnInit, OnDestroy {
 
     const payload = {
       productId: item.productId,
-      quantity: newQty
+      quantity: change
     };
 
     this.service.postCart(payload).subscribe({
