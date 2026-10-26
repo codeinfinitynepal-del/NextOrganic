@@ -11,7 +11,7 @@ import 'select2';
   selector: 'app-orders',
   standalone: true, // यदि स्ट्यान्डअलोन कम्पोनेन्ट हो भने
   imports: [CommonModule, FormsModule], // २. यहाँ FormsModule थप्नुहोस्
-  templateUrl: './orders.component.html'
+  templateUrl: './orders.component.html',
 })
 export class OrdersComponent implements OnInit, AfterViewInit {
   showPopup: boolean = false;
@@ -22,11 +22,25 @@ export class OrdersComponent implements OnInit, AfterViewInit {
   isLoading: boolean = false;
   selectedStatus: string = ''; // ३. छानिएको स्टेटस राख्न यसलाई प्रयोग गर्ने
 
+  // ==========================================
+  // LIST VARIABLES
+  // ==========================================
+  // orderList: any[] = []; // API bata aeko full list
+  filteredOrderList: any[] = []; // search pachhiko list
+  paginatedOrderList: any[] = []; // current page ko list (template ma yo use huncha)
+
+  // Filter tracking variables
+  searchTerm: string = '';
+
+  // Pagination variables
+  productsPerPage = 20;
+  currentPage = 1;
+
   constructor(
     public service: OrdersService,
     private toastr: ToastrService,
-    private el: ElementRef
-  ) { }
+    private el: ElementRef,
+  ) {}
 
   ngAfterViewInit(): void {}
 
@@ -34,7 +48,86 @@ export class OrdersComponent implements OnInit, AfterViewInit {
     this.fetchAllOrders();
   }
 
-    // ----------------------------------------------------
+  fetchAllOrders() {
+    this.isLoading = true;
+    this.service.getAllOrders().subscribe({
+      next: (res: any) => {
+        this.orderList = res;
+        console.log(this.orderList, this.orderList);
+        this.isLoading = false;
+        this.applyFilters(); // search + pagination lagaune
+      },
+      error: (err: any) => {
+        console.error(err);
+        this.isLoading = false;
+      },
+    });
+  }
+
+  // ==========================================
+  // SEARCH FUNCTION
+  // ==========================================
+  onSearch(event: any): void {
+    this.searchTerm = event.target.value?.trim().toLowerCase() || '';
+    this.currentPage = 1; // search garda page 1 ma jane
+    this.applyFilters();
+  }
+
+  // ==========================================
+  // FILTER + PAGINATION APPLY
+  // ==========================================
+  applyFilters(): void {
+    if (this.searchTerm) {
+      const t = this.searchTerm;
+      this.filteredOrderList = this.orderList.filter((item) =>
+        [
+          item.customerName,
+          item.orderNo,
+          item.orderId,
+          item.contactNumber,
+          item.deliveryAddress,
+        ].some((v) =>
+          String(v ?? '')
+            .toLowerCase()
+            .includes(t),
+        ),
+      );
+    } else {
+      this.filteredOrderList = [...this.orderList];
+    }
+    this.updatePaginatedProducts();
+  }
+  updatePaginatedProducts(): void {
+    const startIndex = (this.currentPage - 1) * this.productsPerPage;
+    const endIndex = startIndex + this.productsPerPage;
+    this.paginatedOrderList = this.filteredOrderList.slice(
+      startIndex,
+      endIndex,
+    );
+  }
+
+  // ==========================================
+  // PAGINATION HELPERS
+  // ==========================================
+  get totalPages(): number {
+    return Math.ceil(this.filteredOrderList.length / this.productsPerPage);
+  }
+
+  getPagesArray(): number[] {
+    const pages: number[] = [];
+    for (let i = 1; i <= this.totalPages; i++) {
+      pages.push(i);
+    }
+    return pages;
+  }
+
+  changePage(page: number): void {
+    if (page < 1 || page > this.totalPages) return;
+    this.currentPage = page;
+    this.updatePaginatedProducts();
+  }
+
+  // ----------------------------------------------------
   // Product List को Total Amount (7700 + 990) Sum गर्ने फङ्क्सन
   // ----------------------------------------------------
   calculateGrandTotal(): number {
@@ -58,22 +151,6 @@ export class OrdersComponent implements OnInit, AfterViewInit {
     }, 0);
   }
 
-
-  fetchAllOrders() {
-    this.isLoading = true;
-    this.service.getAllOrders().subscribe({
-      next: (res: any) => {
-        this.orderList = res;
-        console.log(this.orderList , this.orderList )
-        this.isLoading = false;
-      },
-      error: (err: any) => {
-        console.error(err);
-        this.isLoading = false;
-      }
-    });
-  }
-
   viewOrderDetails(ID: number) {
     this.isLoading = true;
     this.service.getProductList(ID).subscribe({
@@ -84,7 +161,7 @@ export class OrdersComponent implements OnInit, AfterViewInit {
       error: (err: any) => {
         console.error(err);
         this.isLoading = false;
-      }
+      },
     });
   }
 
@@ -126,7 +203,7 @@ export class OrdersComponent implements OnInit, AfterViewInit {
 
     let payload = {
       orderId: ID,
-      orderStatus: this.selectedStatus
+      orderStatus: this.selectedStatus,
     };
 
     this.isLoading = true;
@@ -142,7 +219,7 @@ export class OrdersComponent implements OnInit, AfterViewInit {
         console.error('Failed to update status:', err);
         this.toastr.error('Something went wrong!');
         this.isLoading = false;
-      }
+      },
     });
   }
 }

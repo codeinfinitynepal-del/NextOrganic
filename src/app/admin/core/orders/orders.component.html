@@ -2,6 +2,18 @@
   <div class="container-fluid">
     <div class="row">
       <div class="card-body">
+        <div
+          class="card-header d-flex justify-content-between align-items-center"
+        >
+          <h3 class="mb-0">Order List</h3>
+          <div class="search-box">
+            <input
+              type="text"
+              placeholder="Search products..."
+              (input)="onSearch($event)"
+            />
+          </div>
+        </div>
         <div class="card-table">
           <div class="table__wrapper table__wrapper-70">
             <table class="">
@@ -21,13 +33,13 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let item of orderList; let i = index">
+                <tr *ngFor="let item of paginatedOrderList; let i = index">
                   <td>{{ i + 1 }}</td>
                   <td>{{ item.orderNo }}</td>
                   <td>#{{ item.orderId }}</td>
-                  <th>{{ item.customerName }}</th>
-                  <th>{{ item.contactNumber }}</th>
-                  <th>{{ item.deliveryAddress }}</th>
+                  <td>{{ item.customerName }}</td>
+                  <td>{{ item.contactNumber }}</td>
+                  <td>{{ item.deliveryAddress }}</td>
                   <!-- <td>Rs. {{ item.deliveryCharge | number:'1.2-2' }}</td> -->
                   <td>
                     <span
@@ -70,6 +82,60 @@
         </div>
       </div>
     </div>
+
+    <!-- ===================== -->
+    <!-- CHANGE 3: Pagination UI -->
+    <!-- ===================== -->
+    <div
+      class="d-flex justify-content-between align-items-center px-3 pt-3 border-top flex-wrap gap-2"
+      *ngIf="filteredOrderList.length > 0"
+    >
+      <!-- Left: Showing X - Y of Z -->
+      <small class="text-muted">
+        Showing
+        {{ (currentPage - 1) * productsPerPage + 1 }}
+        –
+        {{
+          currentPage * productsPerPage > filteredOrderList.length
+            ? filteredOrderList.length
+            : currentPage * productsPerPage
+        }}
+        of {{ filteredOrderList.length }} products
+      </small>
+
+      <!-- Right: Page Buttons -->
+      <nav>
+        <ul class="pagination pagination-sm mb-0">
+          <!-- Prev Button -->
+          <li class="page-item" [class.disabled]="currentPage === 1">
+            <button class="page-link" (click)="changePage(currentPage - 1)">
+              &laquo;
+            </button>
+          </li>
+
+          <!-- Page Number Buttons -->
+          <li
+            class="page-item"
+            *ngFor="let page of getPagesArray()"
+            [class.active]="currentPage === page"
+          >
+            <button class="page-link" (click)="changePage(page)">
+              {{ page }}
+            </button>
+          </li>
+
+          <!-- Next Button -->
+          <li class="page-item" [class.disabled]="currentPage === totalPages">
+            <button class="page-link" (click)="changePage(currentPage + 1)">
+              &raquo;
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <!-- ===================== -->
+    <!-- END Pagination -->
+    <!-- ===================== -->
   </div>
 </div>
 
