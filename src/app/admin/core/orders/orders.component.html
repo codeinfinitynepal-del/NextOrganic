@@ -10,6 +10,9 @@
                   <th>Serial no.</th>
                   <th>OrderNo</th>
                   <th>Order Id</th>
+                  <th>Customer Name</th>
+                  <th>Contact Number</th>
+                  <th>Delivery Address</th>
                   <!-- <th>DeliveryCharge</th> -->
                   <th>Order Status</th>
                   <th>Total Amount</th>
@@ -22,6 +25,9 @@
                   <td>{{ i + 1 }}</td>
                   <td>{{ item.orderNo }}</td>
                   <td>#{{ item.orderId }}</td>
+                  <th>{{ item.customerName }}</th>
+                  <th>{{ item.contactNumber }}</th>
+                  <th>{{ item.deliveryAddress }}</th>
                   <!-- <td>Rs. {{ item.deliveryCharge | number:'1.2-2' }}</td> -->
                   <td>
                     <span

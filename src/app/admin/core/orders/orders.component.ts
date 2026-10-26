@@ -64,6 +64,7 @@ export class OrdersComponent implements OnInit, AfterViewInit {
     this.service.getAllOrders().subscribe({
       next: (res: any) => {
         this.orderList = res;
+        console.log(this.orderList , this.orderList )
         this.isLoading = false;
       },
       error: (err: any) => {

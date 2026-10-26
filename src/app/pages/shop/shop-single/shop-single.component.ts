@@ -221,7 +221,7 @@ export class ShopSingleComponent implements AfterViewInit, OnInit {
 
     return container.outerHTML;
   }
-  
+
   // Optional parameter राखिएको छ ताकि Footer बाट वा Product Card बाट दुवै ठाउँबाट प्रयोग गर्न सकियोस्
   chatOnWhatsApp(product?: any): void {
     const phone = '9779841643759'; // तपाईंको मुख्य फोन नम्बर राख्नुहोस्
